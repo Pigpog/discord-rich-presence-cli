@@ -1,0 +1,5 @@
+CMakeFiles/
+include/
+lib/
+cmale_install.cmake
+send-presence
