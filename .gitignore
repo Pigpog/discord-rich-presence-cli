@@ -1,5 +1,5 @@
 CMakeFiles/
 include/
 lib/
-cmale_install.cmake
+cmake_install.cmake
 send-presence
