@@ -3,3 +3,4 @@ include/
 lib/
 cmake_install.cmake
 send-presence
+CMakeCache.txt
