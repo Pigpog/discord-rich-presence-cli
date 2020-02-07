@@ -17,8 +17,8 @@ static void updateDiscordPresence(char* details, char* state, char* largeImageKe
         memset(&discordPresence, 0, sizeof(discordPresence));
         discordPresence.state = state;
         discordPresence.details = details;
-        discordPresence.startTimestamp = StartTime;
-        discordPresence.endTimestamp = time(0) + 5 * 60;
+        //discordPresence.startTimestamp = StartTime;
+        //discordPresence.endTimestamp = time(0) + 5 * 60;
         discordPresence.largeImageKey = largeImageKey;
         discordPresence.smallImageKey = smallImageKey;
         discordPresence.instance = 0;
