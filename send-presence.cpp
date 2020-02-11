@@ -6,7 +6,6 @@ using namespace std;
 
 
 static const char* APPLICATION_ID = "410664151334256663";
-static int64_t StartTime;
 static int SendPresence = 1;
 
 static void updateDiscordPresence(char* details, char* state, char* largeImageKey, char* smallImageKey)
@@ -80,8 +79,6 @@ static void inputLoop()
     SendPresence = 1;
     char line[512];
     char* space;
-
-    StartTime = time(0);
 
     printf("Rich presence loop begins\n");
     while (SendPresence) {
