@@ -4,14 +4,12 @@
 
 using namespace std;
 
-
-static const char* APPLICATION_ID = "410664151334256663";
-static int SendPresence = 1;
+static char APPLICATION_ID[19] = {0};
+static bool SendPresence = true;
 
 static void updateDiscordPresence(char* details, char* state, char* largeImageKey, char* smallImageKey)
 {
     if (SendPresence) {
-        char buffer[256];
         DiscordRichPresence discordPresence;
         memset(&discordPresence, 0, sizeof(discordPresence));
         discordPresence.state = state;
@@ -31,9 +29,9 @@ static void updateDiscordPresence(char* details, char* state, char* largeImageKe
 static void handleDiscordReady(const DiscordUser* connectedUser)
 {
     printf("\nDiscord: connected to user %s#%s - %s\n",
-           connectedUser->username,
-           connectedUser->discriminator,
-           connectedUser->userId);
+        connectedUser->username,
+        connectedUser->discriminator,
+        connectedUser->userId);
 }
 
 static void handleDiscordDisconnected(int errcode, const char* message)
@@ -46,21 +44,6 @@ static void handleDiscordError(int errcode, const char* message)
     printf("\nDiscord: error (%d: %s)\n", errcode, message);
 }
 
-static void handleDiscordJoin(const char* secret)
-{
-    printf("\nDiscord: join (%s)\n", secret);
-}
-
-static void handleDiscordSpectate(const char* secret)
-{
-    printf("\nDiscord: spectate (%s)\n", secret);
-}
-
-static void handleDiscordJoinRequest(const DiscordUser* request)
-{
-   
-}
-
 static void discordInit()
 {
     DiscordEventHandlers handlers;
@@ -68,49 +51,74 @@ static void discordInit()
     handlers.ready = handleDiscordReady;
     handlers.disconnected = handleDiscordDisconnected;
     handlers.errored = handleDiscordError;
-    handlers.joinGame = handleDiscordJoin;
-    handlers.spectateGame = handleDiscordSpectate;
-    handlers.joinRequest = handleDiscordJoinRequest;
     Discord_Initialize(APPLICATION_ID, &handlers, 1, NULL);
 }
 
 static void inputLoop()
 {
-    SendPresence = 1;
-    char line[512];
-    char* space;
-
+    SendPresence = true;
     printf("Rich presence loop begins\n");
+
     while (SendPresence) {
         cin.clear();
         cin.sync();
-        char details[128];
-        char state[128];
-        char largeImageKey[128];
-        char smallImageKey[128];
+
+        // the 128 character limit is made up by me
+        char details[128] = {0};
+        char state[128] = {0};
+        char largeImageKey[128] = {0};
+        char smallImageKey[128] = {0};
 
         cout << "Details: ";
         cin.getline(details, sizeof(details));
+        if (details[0] == 0) {
+            Discord_ClearPresence();
+            continue;
+        }
+
         cout << "State: ";
         cin.getline(state, sizeof(state));
+        if (state[0] == 0) {
+            Discord_ClearPresence();
+            continue;
+        }
+
         cout << "Large Image Key: ";
         cin.getline(largeImageKey, sizeof(largeImageKey));
+        if (largeImageKey[0] == 0) {
+            Discord_ClearPresence();
+            continue;
+        }
+
         cout << "Small Image Key: ";
         cin.getline(smallImageKey, sizeof(smallImageKey));
+        if (smallImageKey[0] == 0) {
+            Discord_ClearPresence();
+            continue;
+        }
 
-        cout << "\nSent to discord!\n";
-    
         updateDiscordPresence(details, state, largeImageKey, smallImageKey);
+        cout << "\nSent to discord!\n";
     }
-    Discord_Shutdown();
 }
 
 
 int main(int argc, char* argv[])
 {
+    cin.clear();
+    cin.sync();
+    // Collect application id from stdin
+    cout << "Application ID: ";
+    cin.getline(APPLICATION_ID, sizeof(APPLICATION_ID));
+
+    // Initialize communications with Discord
     discordInit();
 
+    // Start our input loop
     inputLoop();
+
+    // Clean shutdown
+    Discord_Shutdown();
     
     return 0;
 }
