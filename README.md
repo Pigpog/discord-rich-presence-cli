@@ -1,5 +1,6 @@
 # Discord Rich Presence CLI
 Set your Discord Rich Presence from the command line!
+
 _Adapted from the send-presence program found in https://github.com/discordapp/discord-rpc/_
 
 ## Description
@@ -32,3 +33,16 @@ Details.
 As soon as the Small Image Key is entered, the rich presence data is 
 sent to Discord to update the presence, and the input process begins 
 again.
+
+## Compiling
+### Linux
+1. Download the latest release of [Discord-RPC](https://github.com/discordapp/discord-rpc/releases)
+2. Extract the zip file
+3. Copy the files from linux-dynamic/lib to /usr/lib, and the files from linux-dynamic/include to /usr/include
+4. Run the following commands from this project's root directory:
+```
+sudo ldconfig
+cmake .
+make
+```
+You should now have a binary file named "send-presence". Run it with `./send-presence`, and it should start asking you questions (see Usage).
