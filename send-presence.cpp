@@ -1,21 +1,21 @@
 #include <iostream>
 #include "discord_rpc.h"
 #include <cstring>
+#include <limits>
 
 using namespace std;
 
 static char APPLICATION_ID[19] = {0};
 static bool SendPresence = true;
 
-static void updateDiscordPresence(char* details, char* state, char* largeImageKey, char* smallImageKey)
+static void updateDiscordPresence(char* details, char* state, char* largeImageKey, char* smallImageKey, int64_t endTimestamp)
 {
     if (SendPresence) {
         DiscordRichPresence discordPresence;
         memset(&discordPresence, 0, sizeof(discordPresence));
         discordPresence.state = state;
         discordPresence.details = details;
-        //discordPresence.startTimestamp = StartTime;
-        //discordPresence.endTimestamp = time(0) + 5 * 60;
+        discordPresence.endTimestamp = endTimestamp;
         discordPresence.largeImageKey = largeImageKey;
         discordPresence.smallImageKey = smallImageKey;
         discordPresence.instance = 0;
@@ -60,14 +60,12 @@ static void inputLoop()
     printf("Rich presence loop begins\n");
 
     while (SendPresence) {
-        cin.clear();
-        cin.sync();
-
         // the 128 character limit is made up by me
         char details[128] = {0};
         char state[128] = {0};
         char largeImageKey[128] = {0};
         char smallImageKey[128] = {0};
+        int64_t endTimestamp = 0;
 
         cout << "Details: ";
         cin.getline(details, sizeof(details));
@@ -96,8 +94,17 @@ static void inputLoop()
             Discord_ClearPresence();
             continue;
         }
+        cout << "End Timestamp: ";
+        cin >> endTimestamp;
+        if(cin.fail()) {
+            cout << "Not a number.";
+        }
+        
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.sync();
 
-        updateDiscordPresence(details, state, largeImageKey, smallImageKey);
+        updateDiscordPresence(details, state, largeImageKey, smallImageKey, endTimestamp);
         cout << "\nSent to discord!\n";
     }
 }
@@ -110,6 +117,9 @@ int main(int argc, char* argv[])
     // Collect application id from stdin
     cout << "Application ID: ";
     cin.getline(APPLICATION_ID, sizeof(APPLICATION_ID));
+
+    cin.clear();
+    cin.sync();
 
     // Initialize communications with Discord
     discordInit();
