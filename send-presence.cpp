@@ -76,24 +76,13 @@ static void inputLoop()
 
         cout << "State: ";
         cin.getline(state, sizeof(state));
-        if (state[0] == 0) {
-            Discord_ClearPresence();
-            continue;
-        }
 
         cout << "Large Image Key: ";
         cin.getline(largeImageKey, sizeof(largeImageKey));
-        if (largeImageKey[0] == 0) {
-            Discord_ClearPresence();
-            continue;
-        }
 
         cout << "Small Image Key: ";
         cin.getline(smallImageKey, sizeof(smallImageKey));
-        if (smallImageKey[0] == 0) {
-            Discord_ClearPresence();
-            continue;
-        }
+
         cout << "End Timestamp: ";
         cin >> endTimestamp;
         if(cin.fail()) {
