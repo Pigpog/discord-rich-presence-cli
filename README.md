@@ -31,8 +31,8 @@ Presence. Here is the order in which the data should be entered:
 As soon as the end timestamp is entered, your rich presence is updated,
 and the input process begins again.
 
-Leaving a prompt blank will clear the presence and reset the input loop,
-prompting for Details again.
+Leaving a prompt blank will reset the input loop, prompting for Details
+again. Leaving the Details prompt blank will clear the presence.
 
 ## Compiling
 
