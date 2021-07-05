@@ -8,14 +8,19 @@ using namespace std;
 static char APPLICATION_ID[19] = {0};
 static bool SendPresence = true;
 
-static void updateDiscordPresence(char* details, char* state, char* largeImageKey, char* smallImageKey, int64_t endTimestamp)
+static void updateDiscordPresence(char* details, char* state, char* largeImageKey, char* smallImageKey, int64_t startTimestamp, int64_t endTimestamp)
 {
     if (SendPresence) {
         DiscordRichPresence discordPresence;
         memset(&discordPresence, 0, sizeof(discordPresence));
         discordPresence.state = state;
         discordPresence.details = details;
-        discordPresence.endTimestamp = endTimestamp;
+	if (startTimestamp != 0) {
+		discordPresence.startTimestamp = startTimestamp;
+	}
+	if (endTimestamp != 0) {
+        	discordPresence.endTimestamp = endTimestamp;
+	}
         discordPresence.largeImageKey = largeImageKey;
         discordPresence.smallImageKey = smallImageKey;
         discordPresence.instance = 0;
@@ -65,6 +70,7 @@ static void inputLoop()
         char state[128] = {0};
         char largeImageKey[128] = {0};
         char smallImageKey[128] = {0};
+	int64_t startTimestamp = 0;
         int64_t endTimestamp = 0;
 
         cout << "Details: ";
@@ -83,6 +89,11 @@ static void inputLoop()
         cout << "Small Image Key: ";
         cin.getline(smallImageKey, sizeof(smallImageKey));
 
+	cout << "Start Timestamp: ";
+        cin >> startTimestamp;
+        if(cin.fail()) {
+            cout << "Not a number.";
+        }
         cout << "End Timestamp: ";
         cin >> endTimestamp;
         if(cin.fail()) {
@@ -93,7 +104,7 @@ static void inputLoop()
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cin.sync();
 
-        updateDiscordPresence(details, state, largeImageKey, smallImageKey, endTimestamp);
+        updateDiscordPresence(details, state, largeImageKey, smallImageKey, startTimestamp, endTimestamp);
         cout << "\nSent to discord!\n";
     }
 }

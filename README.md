@@ -1,5 +1,5 @@
 # Discord Rich Presence CLI
-Set your Discord Rich Presence from the command line!
+Set your Discord Rich Presence from the command line or script!
 
 _Adapted from the send-presence program found in https://github.com/discordapp/discord-rpc/_
 
@@ -25,24 +25,33 @@ Presence. Here is the order in which the data should be entered:
  2. State
  3. Large Image Key
  4. Small Image Key
+ 5. Start timestamp (0 for none)
+ 6. End timestamp (0 for none)
 
-If any of these attributes are missing, it will immediately clear the 
-rich presence and restart its input loop, going back to prompting for 
-Details.
+As soon as the end timestamp is entered, your rich presence is updated,
+and the input process begins again.
 
-As soon as the Small Image Key is entered, the rich presence data is 
-sent to Discord to update the presence, and the input process begins 
-again.
+Leaving a prompt blank will clear the presence and reset the input loop,
+prompting for Details again.
 
 ## Compiling
+
 ### Linux
-1. Download the latest release of [Discord-RPC](https://github.com/discordapp/discord-rpc/releases)
-2. Extract the zip file
-3. Copy the files from linux-dynamic/lib to /usr/lib, and the files from linux-dynamic/include to /usr/include
-4. Run the following commands from this project's root directory:
+
+1. Clone this repository:
+
+```
+git clone https://github.com/Pigpog/discord-rich-presence-cli.git
+```
+
+2. Download and extract the latest release of [Discord-RPC](https://github.com/discordapp/discord-rpc/releases)
+4. Copy the files from linux-dynamic/lib to /usr/lib, and the files from linux-dynamic/include to /usr/include
+5. Run the following commands from this project's root directory:
+
 ```
 sudo ldconfig
 cmake .
 make
 ```
+
 You should now have a binary file named "send-presence". Run it with `./send-presence`, and it should start asking you questions (see Usage).
